@@ -14,6 +14,10 @@ class SoftShadowButton extends MorphingButtonBase {
     super.key,
     required super.label,
     super.onTap,
+    super.onLeftTap,
+    super.onRightTap,
+    super.accentColor,
+    super.textColor,
     super.fontSize = 14,
     super.letterSpacing = 1.5,
     super.horizontalPadding = 52,
@@ -35,12 +39,20 @@ class _SoftShadowButtonState extends MorphingButtonBaseState<SoftShadowButton> {
     final leftFactor = presence * (1.0 - dir * 2).clamp(0.0, 1.0);
     final rightFactor = presence * (dir * 2 - 1.0).clamp(0.0, 1.0);
     final shadowX = lerpValue(-8, 8, ratio) * presence;
-    final hue = lerpValue(20, 350, ratio);
+    // Hue: sweep ±30 around accent hue, or full spectrum when no accent
+    final double hue;
+    if (widget.accentColor != null) {
+      final baseHue = HSLColor.fromColor(widget.accentColor!).hue;
+      hue = lerpValue(baseHue - 30, baseHue + 30, ratio) % 360;
+    } else {
+      hue = lerpValue(20, 350, ratio);
+    }
+    final labelColor = widget.textColor ?? const Color(0xFF333333);
 
     final shadowColor =
         HSLColor.fromAHSL(0.25, hue, 0.6, 0.6).toColor();
     final barColor1 = HSLColor.fromAHSL(1, hue, 0.7, 0.65).toColor();
-    final barColor2 = HSLColor.fromAHSL(1, hue + 40, 0.7, 0.65).toColor();
+    final barColor2 = HSLColor.fromAHSL(1, (hue + 40) % 360, 0.7, 0.65).toColor();
     final arrowColor = HSLColor.fromAHSL(1, hue, 0.55, 0.5).toColor();
 
     return Transform.translate(
@@ -128,7 +140,7 @@ class _SoftShadowButtonState extends MorphingButtonBaseState<SoftShadowButton> {
                           fontSize: widget.fontSize,
                           fontWeight: FontWeight.w500,
                           letterSpacing: widget.letterSpacing,
-                          color: const Color(0xFF333333),
+                          color: labelColor,
                         ),
                       ),
                     ),

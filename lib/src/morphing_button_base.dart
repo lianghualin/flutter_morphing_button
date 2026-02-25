@@ -74,9 +74,17 @@ mixin HoverTracker<T extends StatefulWidget> on State<T>
 }
 
 /// Abstract base widget for morphing buttons.
+///
+/// Supports split-tap zones: [onLeftTap] fires when the left half is tapped,
+/// [onRightTap] fires when the right half is tapped. [onTap] fires on any tap
+/// regardless of position (for backward compatibility).
 abstract class MorphingButtonBase extends StatefulWidget {
   final String label;
   final VoidCallback? onTap;
+  final VoidCallback? onLeftTap;
+  final VoidCallback? onRightTap;
+  final Color? accentColor;
+  final Color? textColor;
   final double fontSize;
   final double letterSpacing;
   final double horizontalPadding;
@@ -88,6 +96,10 @@ abstract class MorphingButtonBase extends StatefulWidget {
     super.key,
     required this.label,
     this.onTap,
+    this.onLeftTap,
+    this.onRightTap,
+    this.accentColor,
+    this.textColor,
     this.fontSize = 13,
     this.letterSpacing = 2,
     this.horizontalPadding = 48,
@@ -102,8 +114,24 @@ abstract class MorphingButtonBase extends StatefulWidget {
 abstract class MorphingButtonBaseState<T extends MorphingButtonBase>
     extends State<T> with SingleTickerProviderStateMixin, HoverTracker<T> {
   double _width = 0;
+  double _tapDownX = 0;
 
   Widget buildButton(BuildContext context);
+
+  void _handleTapDown(TapDownDetails details) {
+    _tapDownX = details.localPosition.dx;
+  }
+
+  void _handleTap() {
+    widget.onTap?.call();
+    if (_width > 0) {
+      if (_tapDownX < _width / 2) {
+        widget.onLeftTap?.call();
+      } else {
+        widget.onRightTap?.call();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +141,8 @@ abstract class MorphingButtonBaseState<T extends MorphingButtonBase>
       onHover: (event) => onHoverUpdate(event, _width),
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
-        onTap: widget.onTap,
+        onTapDown: _handleTapDown,
+        onTap: _handleTap,
         // Support touch: track horizontal drag across the button
         onPanStart: (details) {
           onHoverEnter();

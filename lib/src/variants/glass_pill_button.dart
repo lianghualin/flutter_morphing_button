@@ -13,6 +13,10 @@ class GlassPillButton extends MorphingButtonBase {
     super.key,
     required super.label,
     super.onTap,
+    super.onLeftTap,
+    super.onRightTap,
+    super.accentColor,
+    super.textColor,
     super.fontSize = 13,
     super.letterSpacing = 2.5,
     super.horizontalPadding = 52,
@@ -28,6 +32,8 @@ class GlassPillButton extends MorphingButtonBase {
 class _GlassPillButtonState extends MorphingButtonBaseState<GlassPillButton> {
   @override
   Widget buildButton(BuildContext context) {
+    final accent = widget.accentColor ?? const Color(0xFF6366F1);
+    final labelColor = widget.textColor ?? const Color(0xFF1A1A2E);
     final textX = lerpValue(10, -10, ratio) * presence;
     final leftFactor = presence * (1.0 - dir * 2).clamp(0.0, 1.0);
     final rightFactor = presence * (dir * 2 - 1.0).clamp(0.0, 1.0);
@@ -76,7 +82,7 @@ class _GlassPillButtonState extends MorphingButtonBaseState<GlassPillButton> {
                             shape: BoxShape.circle,
                             gradient: RadialGradient(
                               colors: [
-                                const Color(0xFF6366F1)
+                                accent
                                     .withValues(alpha: 0.1),
                                 Colors.transparent,
                               ],
@@ -104,7 +110,7 @@ class _GlassPillButtonState extends MorphingButtonBaseState<GlassPillButton> {
                                 ratio: ratio,
                                 presence: presence,
                                 dir: dir,
-                                color: const Color(0xFF6366F1),
+                                color: accent,
                                 strokeWidth: widget.arrowStrokeWidth,
                                 arrowSize: widget.arrowSize,
                               ),
@@ -121,7 +127,7 @@ class _GlassPillButtonState extends MorphingButtonBaseState<GlassPillButton> {
                             fontSize: widget.fontSize,
                             fontWeight: FontWeight.w600,
                             letterSpacing: widget.letterSpacing,
-                            color: const Color(0xFF1A1A2E),
+                            color: labelColor,
                           ),
                         ),
                       ),
@@ -138,7 +144,7 @@ class _GlassPillButtonState extends MorphingButtonBaseState<GlassPillButton> {
                                 ratio: ratio,
                                 presence: presence,
                                 dir: dir,
-                                color: const Color(0xFF6366F1),
+                                color: accent,
                                 strokeWidth: widget.arrowStrokeWidth,
                                 arrowSize: widget.arrowSize,
                               ),

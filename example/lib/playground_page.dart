@@ -9,6 +9,9 @@ class PlaygroundPage extends StatefulWidget {
 }
 
 class _PlaygroundPageState extends State<PlaygroundPage> {
+  // -- Tap feedback --
+  String _lastTap = '';
+
   // -- Global controls --
   double _arrowSize = 8;
   double _arrowStroke = 2.5;
@@ -19,6 +22,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   double _v1LetterSpacing = 2.5;
   double _v1HPad = 52;
   double _v1VPad = 16;
+  double _v1Hue = 239; // indigo (0xFF6366F1)
+  double _v1TextLightness = 0.14;
 
   // -- V2: Outline Fill --
   String _v2Label = 'NAVIGATE';
@@ -29,6 +34,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   double _v2BorderRadius = 0;
   double _v2BorderWidth = 2;
   double _v2FillOpacity = 0.92;
+  double _v2Hue = 250; // purple base
+  double _v2TextLightness = 0.14;
 
   // -- V3: Soft Shadow --
   String _v3Label = 'DISCOVER';
@@ -38,6 +45,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   double _v3VPad = 18;
   double _v3ShadowBlur = 28;
   double _v3Elevation = 2;
+  double _v3Hue = 185; // mid-spectrum
+  double _v3TextLightness = 0.2;
 
   // -- V4: Underline --
   String _v4Label = 'CONTINUE';
@@ -46,6 +55,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   double _v4HPad = 40;
   double _v4VPad = 14;
   double _v4UnderlineHeight = 1.5;
+  double _v4Hue = 0; // dark (achromatic)
+  double _v4TextLightness = 0.1;
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +74,9 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             children: [
               _buildHeader(),
 
+              // Tap feedback
+              _TapFeedback(message: _lastTap),
+
               // V1: Glass Pill
               _VariantSection(
                 index: 0,
@@ -75,13 +89,30 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   letterSpacing: _v1LetterSpacing,
                   horizontalPadding: _v1HPad,
                   verticalPadding: _v1VPad,
-                  arrowSize: _arrowSize + 2, // glass uses slightly larger
+                  arrowSize: _arrowSize + 2,
                   arrowStrokeWidth: _arrowStroke,
+                  accentColor: HSLColor.fromAHSL(1, _v1Hue, 0.7, 0.55).toColor(),
+                  textColor: HSLColor.fromAHSL(1, _v1Hue, 0.3, _v1TextLightness).toColor(),
+                  onLeftTap: () => setState(() => _lastTap = '\u2190 Glass Pill: LEFT tapped'),
+                  onRightTap: () => setState(() => _lastTap = 'Glass Pill: RIGHT tapped \u2192'),
                 ),
                 controls: [
                   _LabelControl(
                     value: _v1Label,
                     onChanged: (v) => setState(() => _v1Label = v),
+                  ),
+                  _HueSliderControl(
+                    label: 'Accent Hue',
+                    value: _v1Hue,
+                    onChanged: (v) => setState(() => _v1Hue = v),
+                  ),
+                  _SliderControl(
+                    label: 'Text Lightness',
+                    value: _v1TextLightness,
+                    min: 0,
+                    max: 0.8,
+                    decimals: 2,
+                    onChanged: (v) => setState(() => _v1TextLightness = v),
                   ),
                   _SliderControl(
                     label: 'Font Size',
@@ -132,11 +163,28 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   borderRadius: _v2BorderRadius,
                   borderWidth: _v2BorderWidth,
                   fillOpacity: _v2FillOpacity,
+                  accentColor: HSLColor.fromAHSL(1, _v2Hue, 0.65, 0.5).toColor(),
+                  textColor: HSLColor.fromAHSL(1, _v2Hue, 0.1, _v2TextLightness).toColor(),
+                  onLeftTap: () => setState(() => _lastTap = '\u2190 Outline Fill: LEFT tapped'),
+                  onRightTap: () => setState(() => _lastTap = 'Outline Fill: RIGHT tapped \u2192'),
                 ),
                 controls: [
                   _LabelControl(
                     value: _v2Label,
                     onChanged: (v) => setState(() => _v2Label = v),
+                  ),
+                  _HueSliderControl(
+                    label: 'Accent Hue',
+                    value: _v2Hue,
+                    onChanged: (v) => setState(() => _v2Hue = v),
+                  ),
+                  _SliderControl(
+                    label: 'Text Lightness',
+                    value: _v2TextLightness,
+                    min: 0,
+                    max: 0.8,
+                    decimals: 2,
+                    onChanged: (v) => setState(() => _v2TextLightness = v),
                   ),
                   _SliderControl(
                     label: 'Border Radius',
@@ -209,11 +257,28 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   arrowStrokeWidth: _arrowStroke,
                   shadowBlur: _v3ShadowBlur,
                   elevation: _v3Elevation,
+                  accentColor: HSLColor.fromAHSL(1, _v3Hue, 0.65, 0.55).toColor(),
+                  textColor: HSLColor.fromAHSL(1, _v3Hue, 0.1, _v3TextLightness).toColor(),
+                  onLeftTap: () => setState(() => _lastTap = '\u2190 Soft Shadow: LEFT tapped'),
+                  onRightTap: () => setState(() => _lastTap = 'Soft Shadow: RIGHT tapped \u2192'),
                 ),
                 controls: [
                   _LabelControl(
                     value: _v3Label,
                     onChanged: (v) => setState(() => _v3Label = v),
+                  ),
+                  _HueSliderControl(
+                    label: 'Accent Hue',
+                    value: _v3Hue,
+                    onChanged: (v) => setState(() => _v3Hue = v),
+                  ),
+                  _SliderControl(
+                    label: 'Text Lightness',
+                    value: _v3TextLightness,
+                    min: 0,
+                    max: 0.8,
+                    decimals: 2,
+                    onChanged: (v) => setState(() => _v3TextLightness = v),
                   ),
                   _SliderControl(
                     label: 'Shadow Blur',
@@ -277,11 +342,28 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   arrowSize: _arrowSize - 1,
                   arrowStrokeWidth: _arrowStroke - 1,
                   underlineHeight: _v4UnderlineHeight,
+                  accentColor: HSLColor.fromAHSL(1, _v4Hue, 0.7, 0.35).toColor(),
+                  textColor: HSLColor.fromAHSL(1, _v4Hue, 0.2, _v4TextLightness).toColor(),
+                  onLeftTap: () => setState(() => _lastTap = '\u2190 Underline: LEFT tapped'),
+                  onRightTap: () => setState(() => _lastTap = 'Underline: RIGHT tapped \u2192'),
                 ),
                 controls: [
                   _LabelControl(
                     value: _v4Label,
                     onChanged: (v) => setState(() => _v4Label = v),
+                  ),
+                  _HueSliderControl(
+                    label: 'Accent Hue',
+                    value: _v4Hue,
+                    onChanged: (v) => setState(() => _v4Hue = v),
+                  ),
+                  _SliderControl(
+                    label: 'Text Lightness',
+                    value: _v4TextLightness,
+                    min: 0,
+                    max: 0.8,
+                    decimals: 2,
+                    onChanged: (v) => setState(() => _v4TextLightness = v),
                   ),
                   _SliderControl(
                     label: 'Underline Height',
@@ -727,6 +809,148 @@ class _SliderControl extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Hue slider control with rainbow track
+// ---------------------------------------------------------------------------
+
+class _HueSliderControl extends StatelessWidget {
+  final String label;
+  final double value;
+  final ValueChanged<double> onChanged;
+
+  const _HueSliderControl({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final previewColor = HSLColor.fromAHSL(1, value, 0.7, 0.5).toColor();
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 110,
+            child: Row(
+              children: [
+                Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: previewColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.black.withValues(alpha: 0.1),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Color(0xFF666666),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Container(
+              height: 24,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                gradient: LinearGradient(
+                  colors: List.generate(
+                    7,
+                    (i) => HSLColor.fromAHSL(1, i * 60.0, 0.7, 0.5).toColor(),
+                  ),
+                ),
+              ),
+              child: SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  trackHeight: 0,
+                  activeTrackColor: Colors.transparent,
+                  inactiveTrackColor: Colors.transparent,
+                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
+                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+                  thumbColor: Colors.white,
+                  overlayColor: Colors.white24,
+                ),
+                child: Slider(
+                  value: value.clamp(0, 360),
+                  min: 0,
+                  max: 360,
+                  onChanged: onChanged,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 48,
+            child: Text(
+              '${value.round()}\u00B0',
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 12,
+                fontFamily: 'monospace',
+                color: Color(0xFF444444),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Tap feedback indicator
+// ---------------------------------------------------------------------------
+
+class _TapFeedback extends StatelessWidget {
+  final String message;
+
+  const _TapFeedback({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    if (message.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        child: Container(
+          key: ValueKey(message),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          decoration: BoxDecoration(
+            color: message.contains('LEFT')
+                ? const Color(0xFFEEF0FF)
+                : const Color(0xFFFFF0F5),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+              color: message.contains('LEFT')
+                  ? const Color(0xFFCCCCEE)
+                  : const Color(0xFFEECCDD),
+            ),
+          ),
+          child: Text(
+            message,
+            style: const TextStyle(
+              fontSize: 12,
+              fontFamily: 'monospace',
+              letterSpacing: 1,
+              color: Color(0xFF444444),
+            ),
+          ),
+        ),
       ),
     );
   }

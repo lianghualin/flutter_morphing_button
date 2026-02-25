@@ -15,6 +15,10 @@ class OutlineFillButton extends MorphingButtonBase {
     super.key,
     required super.label,
     super.onTap,
+    super.onLeftTap,
+    super.onRightTap,
+    super.accentColor,
+    super.textColor,
     super.fontSize,
     super.letterSpacing,
     super.horizontalPadding,
@@ -38,10 +42,17 @@ class _OutlineFillButtonState
     final leftFactor = presence * (1.0 - dir * 2).clamp(0.0, 1.0);
     final rightFactor = presence * (dir * 2 - 1.0).clamp(0.0, 1.0);
 
-    // Accent color shifts from purple (left) to teal (right)
-    final accent = dir > 0.5
-        ? HSLColor.fromAHSL(1, lerpValue(160, 170, dir), 0.7, 0.4).toColor()
-        : HSLColor.fromAHSL(1, lerpValue(250, 260, dir), 0.6, 0.55).toColor();
+    // Accent color: use provided color, or shift purple↔teal with cursor
+    final Color accent;
+    if (widget.accentColor != null) {
+      final hsl = HSLColor.fromColor(widget.accentColor!);
+      final lightness = lerpValue(hsl.lightness - 0.05, hsl.lightness + 0.05, dir);
+      accent = hsl.withLightness(lightness.clamp(0.0, 1.0)).toColor();
+    } else {
+      accent = dir > 0.5
+          ? HSLColor.fromAHSL(1, lerpValue(160, 170, dir), 0.7, 0.4).toColor()
+          : HSLColor.fromAHSL(1, lerpValue(250, 260, dir), 0.6, 0.55).toColor();
+    }
 
     final fillFromLeft = dir <= 0.5;
 
@@ -111,7 +122,7 @@ class _OutlineFillButtonState
                         fontWeight: FontWeight.w700,
                         letterSpacing: widget.letterSpacing,
                         fontFamily: 'monospace',
-                        color: presence > 0.5 ? Colors.white : const Color(0xFF222222),
+                        color: presence > 0.5 ? Colors.white : (widget.textColor ?? const Color(0xFF222222)),
                       ),
                     ),
                   ),

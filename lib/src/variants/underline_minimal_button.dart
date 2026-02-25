@@ -13,6 +13,10 @@ class UnderlineMinimalButton extends MorphingButtonBase {
     super.key,
     required super.label,
     super.onTap,
+    super.onLeftTap,
+    super.onRightTap,
+    super.accentColor,
+    super.textColor,
     super.fontSize,
     super.letterSpacing = 3,
     super.horizontalPadding = 40,
@@ -35,6 +39,8 @@ class _UnderlineMinimalButtonState
     final leftFactor = presence * (1.0 - dir * 2).clamp(0.0, 1.0);
     final rightFactor = presence * (dir * 2 - 1.0).clamp(0.0, 1.0);
     final lineFromRight = dir <= 0.5;
+    final accent = widget.accentColor ?? const Color(0xFF1A1A1A);
+    final labelColor = widget.textColor ?? const Color(0xFF1A1A1A);
 
     return Container(
       constraints: const BoxConstraints(minWidth: 200),
@@ -54,7 +60,7 @@ class _UnderlineMinimalButtonState
                 widthFactor: presence,
                 child: Container(
                   height: widget.underlineHeight,
-                  color: const Color(0xFF1A1A1A),
+                  color: accent,
                 ),
               ),
             ),
@@ -81,7 +87,7 @@ class _UnderlineMinimalButtonState
                           ratio: ratio,
                           presence: presence,
                           dir: dir,
-                          color: const Color(0xFF1A1A1A),
+                          color: accent,
                           strokeWidth: widget.arrowStrokeWidth,
                           arrowSize: widget.arrowSize,
                         ),
@@ -99,7 +105,7 @@ class _UnderlineMinimalButtonState
                       fontWeight: FontWeight.w600,
                       letterSpacing: widget.letterSpacing,
                       fontFamily: 'serif',
-                      color: const Color(0xFF1A1A1A),
+                      color: labelColor,
                     ),
                   ),
                 ),
@@ -116,7 +122,7 @@ class _UnderlineMinimalButtonState
                           ratio: ratio,
                           presence: presence,
                           dir: dir,
-                          color: const Color(0xFF1A1A1A),
+                          color: accent,
                           strokeWidth: widget.arrowStrokeWidth,
                           arrowSize: widget.arrowSize,
                         ),
