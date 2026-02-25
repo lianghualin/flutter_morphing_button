@@ -1,0 +1,63 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IDE
+*.iml
+*.ipr
+*.iws
+.idea/
+.vscode/
+
+# Flutter/Dart tooling
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+.metadata
+.packages
+
+# Build outputs
+**/build/
+/coverage/
+**/doc/api/
+
+# Package lock file (packages should not commit pubspec.lock)
+pubspec.lock
+
+# Platform directories at package root (not needed, this is a package)
+/android/
+/ios/
+/web/
+/macos/
+/linux/
+/windows/
+
+# Flutter generated/ephemeral files
+**/ios/Flutter/.last_build_id
+**/ios/Flutter/ephemeral/
+**/macos/Flutter/ephemeral/
+**/android/local.properties
+**/ios/Flutter/flutter_export_environment.sh
+**/macos/Flutter/GeneratedPluginRegistrant.swift
+**/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/linux/flutter/generated_*
+**/windows/flutter/generated_*
+
+# Source video recordings (GIF is kept in assets/)
+*.mov
+*.mp4
+
+# Claude Code
+.claude/
