@@ -23,6 +23,12 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   double _navWidth = 220;
   int _navSelectedIndex = 0;
 
+  // -- Mode Toggle --
+  ModeToggleState _modeToggleState = ModeToggleState.split;
+  double _modeToggleExpandedWidth = 220;
+  double _modeToggleCollapsedWidth = 52;
+  String _modeToggleLabel = 'MENU';
+
   // -- V1: Glass Pill --
   String _v1Label = 'EXPLORE';
   double _v1FontSize = 13;
@@ -423,6 +429,9 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
               // NavToggle Demo
               _buildNavToggleSection(),
 
+              // Mode Toggle Demo
+              _buildModeToggleSection(),
+
               // Theme Demo
               _buildThemeSection(),
 
@@ -591,6 +600,145 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
               ),
             ),
           ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildModeToggleSection() {
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFEEEEF2))),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+      child: Column(
+        children: [
+          const Text(
+            'MODE TOGGLE',
+            style: TextStyle(
+              fontSize: 10,
+              fontFamily: 'monospace',
+              letterSpacing: 3,
+              color: Color(0xFFAAAAAA),
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Mode Toggle Button',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF1A1A2E),
+              letterSpacing: -0.3,
+            ),
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: 400,
+            child: Text(
+              'A split/collapse toggle. Hover to see arrows, '
+              'tap left to shrink, tap right to keep width, '
+              'tap collapsed to return to split.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade500,
+                height: 1.5,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          // State selector
+          SegmentedButton<ModeToggleState>(
+            segments: const [
+              ButtonSegment(
+                value: ModeToggleState.split,
+                label: Text('Split'),
+                icon: Icon(Icons.unfold_more, size: 16),
+              ),
+              ButtonSegment(
+                value: ModeToggleState.collapsedRight,
+                label: Text('Right'),
+                icon: Icon(Icons.chevron_right, size: 16),
+              ),
+              ButtonSegment(
+                value: ModeToggleState.collapsedLeft,
+                label: Text('Left'),
+                icon: Icon(Icons.chevron_left, size: 16),
+              ),
+            ],
+            selected: {_modeToggleState},
+            onSelectionChanged: (v) =>
+                setState(() => _modeToggleState = v.first),
+          ),
+          const SizedBox(height: 20),
+          // Interactive demo
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFE8E8F0)),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: ModeToggleButton(
+              state: _modeToggleState,
+              expandedWidth: _modeToggleExpandedWidth,
+              collapsedWidth: _modeToggleCollapsedWidth,
+              label: _modeToggleLabel,
+              accentColor: const Color(0xFF6366F1),
+              enabled: _enabled,
+              splitRatio: _splitRatio,
+              onLeftTap: _modeToggleState == ModeToggleState.split
+                  ? () => setState(() {
+                        _modeToggleState = ModeToggleState.collapsedLeft;
+                        _lastTap = '\u2190 Mode Toggle: LEFT (collapse)';
+                      })
+                  : null,
+              onRightTap: _modeToggleState == ModeToggleState.split
+                  ? () => setState(() {
+                        _modeToggleState = ModeToggleState.collapsedRight;
+                        _lastTap = 'Mode Toggle: RIGHT (keep width) \u2192';
+                      })
+                  : null,
+              onTap: () {
+                if (_modeToggleState != ModeToggleState.split) {
+                  setState(() {
+                    _modeToggleState = ModeToggleState.split;
+                    _lastTap = 'Mode Toggle: expand back to split';
+                  });
+                }
+              },
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: 360,
+            child: Column(
+              children: [
+                _LabelControl(
+                  value: _modeToggleLabel,
+                  onChanged: (v) => setState(() => _modeToggleLabel = v),
+                ),
+                _SliderControl(
+                  label: 'Expanded W',
+                  value: _modeToggleExpandedWidth,
+                  min: 120,
+                  max: 360,
+                  onChanged: (v) =>
+                      setState(() => _modeToggleExpandedWidth = v),
+                ),
+                _SliderControl(
+                  label: 'Collapsed W',
+                  value: _modeToggleCollapsedWidth,
+                  min: 36,
+                  max: 80,
+                  onChanged: (v) =>
+                      setState(() => _modeToggleCollapsedWidth = v),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
