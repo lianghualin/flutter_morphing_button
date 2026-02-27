@@ -457,6 +457,9 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
       (Icons.settings_outlined, 'Settings'),
     ];
 
+    // Derive morph progress from width (maps 56-280 → 0.0-1.0)
+    final morphProgress = ((_navWidth - 56) / (280 - 56)).clamp(0.0, 1.0);
+
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
@@ -489,7 +492,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             width: 400,
             child: Text(
               'A hover-aware navigation item with 3 rendering modes. '
-              'Adjust width to see sidebar label fade in/out.',
+              'First item uses iconMorphProgress tied to width slider.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
@@ -541,6 +544,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                           icon: items[i].$1,
                           label: items[i].$2,
                           isSelected: _navSelectedIndex == i,
+                          iconMorphProgress: i == 0 ? morphProgress : null,
                           accentColor: const Color(0xFF6366F1),
                           enabled: _enabled,
                           onTap: () => setState(() {
@@ -562,6 +566,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                             icon: items[i].$1,
                             label: items[i].$2,
                             isSelected: _navSelectedIndex == i,
+                            iconMorphProgress: i == 0 ? morphProgress : null,
                             accentColor: const Color(0xFF6366F1),
                             enabled: _enabled,
                             onTap: () => setState(() {

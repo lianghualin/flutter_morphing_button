@@ -16,6 +16,7 @@ class NavToggleButton extends NavToggleBase {
     super.isSelected,
     super.label,
     super.iconSize,
+    super.iconMorphProgress,
     super.onTap,
     super.accentColor,
     super.textColor,
@@ -27,6 +28,20 @@ class NavToggleButton extends NavToggleBase {
 }
 
 class _NavToggleButtonState extends NavToggleBaseState<NavToggleButton> {
+  Widget _buildIcon(Color color) {
+    if (widget.iconMorphProgress != null) {
+      return CustomPaint(
+        size: Size.square(widget.iconSize),
+        painter: HamburgerMorphPainter(
+          morphProgress: widget.iconMorphProgress!,
+          color: color,
+          strokeWidth: 2.0,
+        ),
+      );
+    }
+    return Icon(widget.icon, size: widget.iconSize, color: color);
+  }
+
   @override
   Widget buildButton(BuildContext context) {
     switch (widget.mode) {
@@ -77,6 +92,21 @@ class _NavToggleButtonState extends NavToggleBaseState<NavToggleButton> {
                 ),
               ),
             ),
+          // Right-edge indicator (visible when selected or hovered)
+          Positioned(
+            right: 4,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: CustomPaint(
+                size: const Size(4, 16),
+                painter: SidebarEdgeIndicatorPainter(
+                  presence: widget.isSelected ? 1.0 : presence,
+                  color: accent,
+                ),
+              ),
+            ),
+          ),
           // Icon + label row
           Center(
             child: Padding(
@@ -84,11 +114,7 @@ class _NavToggleButtonState extends NavToggleBaseState<NavToggleButton> {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(
-                    widget.icon,
-                    size: widget.iconSize,
-                    color: widget.isSelected ? accent : textCol,
-                  ),
+                  _buildIcon(widget.isSelected ? accent : textCol),
                   if (showLabel) ...[
                     const SizedBox(width: 12),
                     Flexible(
@@ -122,21 +148,16 @@ class _NavToggleButtonState extends NavToggleBaseState<NavToggleButton> {
     final accent = widget.accentColor ?? Theme.of(context).colorScheme.primary;
     final textCol = widget.textColor ?? Theme.of(context).colorScheme.onSurface;
 
+    final bgAlpha = widget.isSelected ? 0.12 : presence * 0.08;
     final iconWidget = Container(
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: widget.isSelected
-            ? accent.withValues(alpha: 0.12)
-            : Colors.transparent,
+        color: accent.withValues(alpha: bgAlpha),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Center(
-        child: Icon(
-          widget.icon,
-          size: widget.iconSize,
-          color: widget.isSelected ? accent : textCol,
-        ),
+        child: _buildIcon(widget.isSelected ? accent : textCol),
       ),
     );
 
@@ -163,11 +184,7 @@ class _NavToggleButtonState extends NavToggleBaseState<NavToggleButton> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  widget.icon,
-                  size: widget.iconSize,
-                  color: widget.isSelected ? accent : textCol,
-                ),
+                _buildIcon(widget.isSelected ? accent : textCol),
                 if (showLabel) ...[
                   const SizedBox(width: 8),
                   Text(

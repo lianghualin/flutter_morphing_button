@@ -16,6 +16,7 @@ abstract class NavToggleBase extends HoverButtonBase {
   final IconData icon;
   final String? label;
   final double iconSize;
+  final double? iconMorphProgress;
 
   const NavToggleBase({
     super.key,
@@ -25,6 +26,7 @@ abstract class NavToggleBase extends HoverButtonBase {
     this.isSelected = false,
     this.label,
     this.iconSize = 24,
+    this.iconMorphProgress,
     super.onTap,
     super.onLeftTap,
     super.onRightTap,

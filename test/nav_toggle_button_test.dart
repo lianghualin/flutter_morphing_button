@@ -119,6 +119,106 @@ void main() {
     });
   });
 
+  group('NavToggleButton iconMorphProgress', () {
+    testWidgets('renders CustomPaint with HamburgerMorphPainter when provided',
+        (tester) async {
+      await tester.pumpWidget(wrap(
+        const NavToggleButton(
+          currentWidth: 200,
+          mode: NavToggleMode.sidebar,
+          icon: Icons.menu,
+          iconMorphProgress: 0.5,
+        ),
+      ));
+      // Should find a CustomPaint whose painter is HamburgerMorphPainter
+      final paints = tester.widgetList<CustomPaint>(find.byType(CustomPaint));
+      final hasHamburger = paints.any(
+        (cp) => cp.painter.runtimeType.toString() == 'HamburgerMorphPainter',
+      );
+      expect(hasHamburger, isTrue);
+      // Should NOT have a standard Icon
+      expect(find.byIcon(Icons.menu), findsNothing);
+    });
+
+    testWidgets('renders Icon when iconMorphProgress is null', (tester) async {
+      await tester.pumpWidget(wrap(
+        const NavToggleButton(
+          currentWidth: 200,
+          mode: NavToggleMode.sidebar,
+          icon: Icons.menu,
+        ),
+      ));
+      expect(find.byIcon(Icons.menu), findsOneWidget);
+    });
+
+    testWidgets('works in iconRail mode', (tester) async {
+      await tester.pumpWidget(wrap(
+        const NavToggleButton(
+          currentWidth: 56,
+          mode: NavToggleMode.iconRail,
+          icon: Icons.menu,
+          iconMorphProgress: 0.0,
+        ),
+      ));
+      final paints = tester.widgetList<CustomPaint>(find.byType(CustomPaint));
+      final hasHamburger = paints.any(
+        (cp) => cp.painter.runtimeType.toString() == 'HamburgerMorphPainter',
+      );
+      expect(hasHamburger, isTrue);
+    });
+
+    testWidgets('works in tabBar mode', (tester) async {
+      await tester.pumpWidget(wrap(
+        const NavToggleButton(
+          currentWidth: 120,
+          mode: NavToggleMode.tabBar,
+          icon: Icons.menu,
+          iconMorphProgress: 1.0,
+        ),
+      ));
+      final paints = tester.widgetList<CustomPaint>(find.byType(CustomPaint));
+      final hasHamburger = paints.any(
+        (cp) => cp.painter.runtimeType.toString() == 'HamburgerMorphPainter',
+      );
+      expect(hasHamburger, isTrue);
+    });
+  });
+
+  group('NavToggleButton sidebar right-edge indicator', () {
+    testWidgets('renders SidebarEdgeIndicatorPainter in sidebar mode',
+        (tester) async {
+      await tester.pumpWidget(wrap(
+        const NavToggleButton(
+          currentWidth: 200,
+          mode: NavToggleMode.sidebar,
+          icon: Icons.home,
+          isSelected: true,
+        ),
+      ));
+      final paints = tester.widgetList<CustomPaint>(find.byType(CustomPaint));
+      final hasEdge = paints.any(
+        (cp) =>
+            cp.painter.runtimeType.toString() ==
+            'SidebarEdgeIndicatorPainter',
+      );
+      expect(hasEdge, isTrue);
+    });
+  });
+
+  group('NavToggleButton iconRail hover', () {
+    testWidgets('renders without error with presence active', (tester) async {
+      await tester.pumpWidget(wrap(
+        const NavToggleButton(
+          currentWidth: 56,
+          mode: NavToggleMode.iconRail,
+          icon: Icons.home,
+          isSelected: false,
+        ),
+      ));
+      expect(find.byType(NavToggleButton), findsOneWidget);
+    });
+  });
+
   group('NavToggleButton isSelected visual', () {
     testWidgets('sidebar selected shows indicator', (tester) async {
       await tester.pumpWidget(wrap(

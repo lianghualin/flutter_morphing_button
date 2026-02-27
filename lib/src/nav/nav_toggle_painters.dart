@@ -32,6 +32,36 @@ class TabIndicatorPainter extends CustomPainter {
       oldDelegate.presence != presence || oldDelegate.color != color;
 }
 
+/// Paints a small rounded pill at the right edge, driven by [presence].
+class SidebarEdgeIndicatorPainter extends CustomPainter {
+  final double presence;
+  final Color color;
+
+  SidebarEdgeIndicatorPainter({
+    required this.presence,
+    required this.color,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (presence < 0.01) return;
+    final paint = Paint()..color = color.withValues(alpha: presence);
+    final pillHeight = size.height * presence;
+    final top = (size.height - pillHeight) / 2;
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        Rect.fromLTWH(0, top, size.width, pillHeight),
+        Radius.circular(size.width / 2),
+      ),
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(SidebarEdgeIndicatorPainter oldDelegate) =>
+      oldDelegate.presence != presence || oldDelegate.color != color;
+}
+
 /// Morphs between a hamburger menu icon and an expand icon.
 ///
 /// [morphProgress] 0.0 = hamburger, 1.0 = expanded/arrow.
