@@ -15,6 +15,13 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   // -- Global controls --
   double _arrowSize = 8;
   double _arrowStroke = 2.5;
+  bool _enabled = true;
+  double _splitRatio = 0.5;
+
+  // -- NavToggle --
+  NavToggleMode _navMode = NavToggleMode.sidebar;
+  double _navWidth = 220;
+  int _navSelectedIndex = 0;
 
   // -- V1: Glass Pill --
   String _v1Label = 'EXPLORE';
@@ -91,6 +98,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   verticalPadding: _v1VPad,
                   arrowSize: _arrowSize + 2,
                   arrowStrokeWidth: _arrowStroke,
+                  enabled: _enabled,
+                  splitRatio: _splitRatio,
                   accentColor: HSLColor.fromAHSL(1, _v1Hue, 0.7, 0.55).toColor(),
                   textColor: HSLColor.fromAHSL(1, _v1Hue, 0.3, _v1TextLightness).toColor(),
                   onLeftTap: () => setState(() => _lastTap = '\u2190 Glass Pill: LEFT tapped'),
@@ -160,6 +169,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   verticalPadding: _v2VPad,
                   arrowSize: _arrowSize,
                   arrowStrokeWidth: _arrowStroke,
+                  enabled: _enabled,
+                  splitRatio: _splitRatio,
                   borderRadius: _v2BorderRadius,
                   borderWidth: _v2BorderWidth,
                   fillOpacity: _v2FillOpacity,
@@ -255,6 +266,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   verticalPadding: _v3VPad,
                   arrowSize: _arrowSize + 1,
                   arrowStrokeWidth: _arrowStroke,
+                  enabled: _enabled,
+                  splitRatio: _splitRatio,
                   shadowBlur: _v3ShadowBlur,
                   elevation: _v3Elevation,
                   accentColor: HSLColor.fromAHSL(1, _v3Hue, 0.65, 0.55).toColor(),
@@ -341,6 +354,8 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   verticalPadding: _v4VPad,
                   arrowSize: _arrowSize - 1,
                   arrowStrokeWidth: _arrowStroke - 1,
+                  enabled: _enabled,
+                  splitRatio: _splitRatio,
                   underlineHeight: _v4UnderlineHeight,
                   accentColor: HSLColor.fromAHSL(1, _v4Hue, 0.7, 0.35).toColor(),
                   textColor: HSLColor.fromAHSL(1, _v4Hue, 0.2, _v4TextLightness).toColor(),
@@ -405,6 +420,12 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                 ],
               ),
 
+              // NavToggle Demo
+              _buildNavToggleSection(),
+
+              // Theme Demo
+              _buildThemeSection(),
+
               // Global Controls
               _buildGlobalControls(),
 
@@ -424,6 +445,219 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildNavToggleSection() {
+    final items = [
+      (Icons.home_outlined, 'Home'),
+      (Icons.search, 'Search'),
+      (Icons.favorite_outline, 'Favorites'),
+      (Icons.settings_outlined, 'Settings'),
+    ];
+
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFEEEEF2))),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+      child: Column(
+        children: [
+          const Text(
+            'NAV TOGGLE',
+            style: TextStyle(
+              fontSize: 10,
+              fontFamily: 'monospace',
+              letterSpacing: 3,
+              color: Color(0xFFAAAAAA),
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'Navigation Toggle Button',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF1A1A2E),
+              letterSpacing: -0.3,
+            ),
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: 400,
+            child: Text(
+              'A hover-aware navigation item with 3 rendering modes. '
+              'Adjust width to see sidebar label fade in/out.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade500,
+                height: 1.5,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          // Mode selector
+          SegmentedButton<NavToggleMode>(
+            segments: const [
+              ButtonSegment(
+                value: NavToggleMode.sidebar,
+                label: Text('Sidebar'),
+                icon: Icon(Icons.view_sidebar_outlined, size: 16),
+              ),
+              ButtonSegment(
+                value: NavToggleMode.iconRail,
+                label: Text('Icon Rail'),
+                icon: Icon(Icons.view_week_outlined, size: 16),
+              ),
+              ButtonSegment(
+                value: NavToggleMode.tabBar,
+                label: Text('Tab Bar'),
+                icon: Icon(Icons.tab_outlined, size: 16),
+              ),
+            ],
+            selected: {_navMode},
+            onSelectionChanged: (v) => setState(() => _navMode = v.first),
+          ),
+          const SizedBox(height: 20),
+          // Nav items
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: const Color(0xFFE8E8F0)),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: _navMode == NavToggleMode.tabBar
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      for (var i = 0; i < items.length; i++)
+                        NavToggleButton(
+                          currentWidth: 120,
+                          mode: _navMode,
+                          icon: items[i].$1,
+                          label: items[i].$2,
+                          isSelected: _navSelectedIndex == i,
+                          accentColor: const Color(0xFF6366F1),
+                          enabled: _enabled,
+                          onTap: () => setState(() {
+                            _navSelectedIndex = i;
+                            _lastTap = 'Nav: ${items[i].$2} tapped';
+                          }),
+                        ),
+                    ],
+                  )
+                : SizedBox(
+                    width: _navWidth,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        for (var i = 0; i < items.length; i++)
+                          NavToggleButton(
+                            currentWidth: _navWidth,
+                            mode: _navMode,
+                            icon: items[i].$1,
+                            label: items[i].$2,
+                            isSelected: _navSelectedIndex == i,
+                            accentColor: const Color(0xFF6366F1),
+                            enabled: _enabled,
+                            onTap: () => setState(() {
+                              _navSelectedIndex = i;
+                              _lastTap = 'Nav: ${items[i].$2} tapped';
+                            }),
+                          ),
+                      ],
+                    ),
+                  ),
+          ),
+          if (_navMode != NavToggleMode.tabBar) ...[
+            const SizedBox(height: 16),
+            SizedBox(
+              width: 360,
+              child: _SliderControl(
+                label: 'Nav Width',
+                value: _navWidth,
+                min: 56,
+                max: 280,
+                onChanged: (v) => setState(() => _navWidth = v),
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildThemeSection() {
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        border: Border(bottom: BorderSide(color: Color(0xFFEEEEF2))),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 48),
+      child: Column(
+        children: [
+          const Text(
+            'THEME',
+            style: TextStyle(
+              fontSize: 10,
+              fontFamily: 'monospace',
+              letterSpacing: 3,
+              color: Color(0xFFAAAAAA),
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
+            'MorphingButtonTheme',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF1A1A2E),
+              letterSpacing: -0.3,
+            ),
+          ),
+          const SizedBox(height: 6),
+          SizedBox(
+            width: 400,
+            child: Text(
+              'Wrap buttons in a MorphingButtonTheme to set defaults. '
+              'These two buttons inherit fontSize and arrowSize from the theme.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.grey.shade500,
+                height: 1.5,
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          MorphingButtonTheme(
+            data: const MorphingButtonThemeData(
+              fontSize: 16,
+              arrowSize: 12,
+              letterSpacing: 3,
+              accentColor: Color(0xFF10B981),
+            ),
+            child: Column(
+              children: [
+                GlassPillButton(
+                  label: 'THEMED',
+                  onTap: () =>
+                      setState(() => _lastTap = 'Themed Glass Pill tapped'),
+                ),
+                const SizedBox(height: 16),
+                OutlineFillButton(
+                  label: 'THEMED',
+                  onTap: () =>
+                      setState(() => _lastTap = 'Themed Outline Fill tapped'),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -448,6 +682,19 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             max: 5,
             decimals: 1,
             onChanged: (v) => setState(() => _arrowStroke = v),
+          ),
+          _SliderControl(
+            label: 'Split Ratio',
+            value: _splitRatio,
+            min: 0.1,
+            max: 0.9,
+            decimals: 2,
+            onChanged: (v) => setState(() => _splitRatio = v),
+          ),
+          _ToggleControl(
+            label: 'Enabled',
+            value: _enabled,
+            onChanged: (v) => setState(() => _enabled = v),
           ),
         ],
       ),
@@ -951,6 +1198,56 @@ class _TapFeedback extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Label text control
+// ---------------------------------------------------------------------------
+
+class _ToggleControl extends StatelessWidget {
+  final String label;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const _ToggleControl({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 110,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Color(0xFF666666),
+              ),
+            ),
+          ),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: const Color(0xFF6366F1),
+          ),
+          Text(
+            value ? 'ON' : 'OFF',
+            style: TextStyle(
+              fontSize: 12,
+              fontFamily: 'monospace',
+              color: value ? const Color(0xFF6366F1) : const Color(0xFF999999),
+            ),
+          ),
+        ],
       ),
     );
   }

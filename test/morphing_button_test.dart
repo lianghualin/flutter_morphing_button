@@ -72,4 +72,67 @@ void main() {
     expect(dirFromRatio(0.66), 1.0);
     expect(dirFromRatio(1.0), 1.0);
   });
+
+  group('enabled defaults to true', () {
+    test('GlassPillButton', () {
+      const b = GlassPillButton(label: 'E');
+      expect(b.enabled, true);
+    });
+    test('OutlineFillButton', () {
+      const b = OutlineFillButton(label: 'E');
+      expect(b.enabled, true);
+    });
+    test('SoftShadowButton', () {
+      const b = SoftShadowButton(label: 'E');
+      expect(b.enabled, true);
+    });
+    test('UnderlineMinimalButton', () {
+      const b = UnderlineMinimalButton(label: 'E');
+      expect(b.enabled, true);
+    });
+  });
+
+  group('splitRatio defaults to 0.5', () {
+    test('GlassPillButton', () {
+      const b = GlassPillButton(label: 'S');
+      expect(b.splitRatio, 0.5);
+    });
+    test('OutlineFillButton', () {
+      const b = OutlineFillButton(label: 'S');
+      expect(b.splitRatio, 0.5);
+    });
+    test('SoftShadowButton', () {
+      const b = SoftShadowButton(label: 'S');
+      expect(b.splitRatio, 0.5);
+    });
+    test('UnderlineMinimalButton', () {
+      const b = UnderlineMinimalButton(label: 'S');
+      expect(b.splitRatio, 0.5);
+    });
+  });
+
+  group('enabled and splitRatio accept custom values', () {
+    test('GlassPillButton', () {
+      const b = GlassPillButton(label: 'C', enabled: false, splitRatio: 0.3);
+      expect(b.enabled, false);
+      expect(b.splitRatio, 0.3);
+    });
+    test('OutlineFillButton', () {
+      const b =
+          OutlineFillButton(label: 'C', enabled: false, splitRatio: 0.7);
+      expect(b.enabled, false);
+      expect(b.splitRatio, 0.7);
+    });
+    test('SoftShadowButton', () {
+      const b = SoftShadowButton(label: 'C', enabled: false, splitRatio: 0.4);
+      expect(b.enabled, false);
+      expect(b.splitRatio, 0.4);
+    });
+    test('UnderlineMinimalButton', () {
+      const b =
+          UnderlineMinimalButton(label: 'C', enabled: false, splitRatio: 0.6);
+      expect(b.enabled, false);
+      expect(b.splitRatio, 0.6);
+    });
+  });
 }
