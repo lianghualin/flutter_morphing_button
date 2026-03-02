@@ -3,6 +3,16 @@ description: A Flutter package providing morphing button widgets with smooth dir
 
 version: 0.1.0
 
+homepage: https://github.com/lianghualin/flutter_morphing_button
+repository: https://github.com/lianghualin/flutter_morphing_button
+issue_tracker: https://github.com/lianghualin/flutter_morphing_button/issues
+
+topics:
+  - widget
+  - button
+  - animation
+  - ui
+
 environment:
   sdk: ^3.11.0
 

@@ -4,7 +4,7 @@ A Flutter package providing morphing button widgets with smooth directional arro
 
 Hover across each button — the arrow morphs based on where your cursor is. Left side shows ←, right side shows →, with smooth interpolation between states.
 
-![Morphing Button Demo](assets/example.gif)
+![Morphing Button Demo](https://raw.githubusercontent.com/lianghualin/flutter_morphing_button/main/assets/example.gif)
 
 ## Features
 
