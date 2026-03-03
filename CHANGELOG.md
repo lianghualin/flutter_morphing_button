@@ -1,3 +1,12 @@
+## 0.1.1
+
+- Add `Widget? icon` parameter to ModeToggleButton for custom branding
+- Branding layout: icon + label on the left, hamburger on the right
+- CollapsedLeft shows centered icon or circled monogram fallback
+- Smooth cross-fade between expanded content and collapsed branding
+- Add ModeToggleButton section to README
+- Add interactive icon picker to playground example
+
 ## 0.1.0
 
 - Initial release
