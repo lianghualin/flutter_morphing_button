@@ -1505,7 +1505,7 @@ class _IconPickerControl extends StatelessWidget {
   }
 }
 
-class _LabelControl extends StatelessWidget {
+class _LabelControl extends StatefulWidget {
   final String value;
   final ValueChanged<String> onChanged;
 
@@ -1513,6 +1513,34 @@ class _LabelControl extends StatelessWidget {
     required this.value,
     required this.onChanged,
   });
+
+  @override
+  State<_LabelControl> createState() => _LabelControlState();
+}
+
+class _LabelControlState extends State<_LabelControl> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.value);
+  }
+
+  @override
+  void didUpdateWidget(_LabelControl oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.value != oldWidget.value &&
+        widget.value != _controller.text) {
+      _controller.text = widget.value;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1534,8 +1562,8 @@ class _LabelControl extends StatelessWidget {
             child: SizedBox(
               height: 32,
               child: TextField(
-                controller: TextEditingController(text: value),
-                onChanged: onChanged,
+                controller: _controller,
+                onChanged: widget.onChanged,
                 style: const TextStyle(
                   fontSize: 12,
                   fontFamily: 'monospace',

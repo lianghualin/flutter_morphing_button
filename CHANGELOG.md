@@ -1,3 +1,8 @@
+## 0.1.3
+
+- Fix label truncation when branding is present (use `Expanded` instead of `Flexible` + `Spacer`)
+- Fix playground label text field losing input on each keystroke (persistent `TextEditingController`)
+
 ## 0.1.2
 
 - Add `showModeIcon` parameter to ModeToggleButton (default `true`)

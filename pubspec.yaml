@@ -1,7 +1,7 @@
 name: morphing_button
 description: A Flutter package providing morphing button widgets with smooth directional arrow animations that respond to cursor position.
 
-version: 0.1.2
+version: 0.1.3
 
 homepage: https://github.com/lianghualin/flutter_morphing_button
 repository: https://github.com/lianghualin/flutter_morphing_button

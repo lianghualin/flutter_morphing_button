@@ -161,9 +161,9 @@ class _ModeToggleButtonState
                       // Branding icon
                       if (widget.icon != null)
                         IgnorePointer(child: widget.icon!),
-                      // Label
+                      // Label (Expanded so it takes all remaining space)
                       if (widget.label != null && labelOpacity > 0.01)
-                        Flexible(
+                        Expanded(
                           child: Padding(
                             padding: const EdgeInsets.only(left: 10),
                             child: Opacity(
@@ -180,9 +180,10 @@ class _ModeToggleButtonState
                               ),
                             ),
                           ),
-                        ),
-                      // Spacer pushes hamburger right when branding is present
-                      if (hasBranding) const Spacer(),
+                        )
+                      // Spacer only when no label (icon-only branding)
+                      else if (hasBranding)
+                        const Spacer(),
                       // Hamburger / morph icon (fades when branding replaces it)
                       if (widget.showModeIcon &&
                           (!hasBranding || labelOpacity > 0.01))
