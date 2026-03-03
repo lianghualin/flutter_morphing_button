@@ -227,4 +227,137 @@ void main() {
       expect(tapped, isFalse);
     });
   });
+
+  group('ModeToggleButton branding (icon + label)', () {
+    testWidgets('renders icon widget in split mode', (tester) async {
+      await tester.pumpWidget(wrap(
+        const ModeToggleButton(
+          state: ModeToggleState.split,
+          icon: Icon(Icons.dashboard, size: 20),
+          label: 'Playground',
+        ),
+      ));
+      expect(find.byIcon(Icons.dashboard), findsOneWidget);
+      expect(find.text('Playground'), findsOneWidget);
+    });
+
+    testWidgets('icon is wrapped in IgnorePointer', (tester) async {
+      await tester.pumpWidget(wrap(
+        const ModeToggleButton(
+          state: ModeToggleState.split,
+          icon: Icon(Icons.dashboard, size: 20),
+          label: 'Playground',
+        ),
+      ));
+      final iconFinder = find.byIcon(Icons.dashboard);
+      final ignorePointer = find.ancestor(
+        of: iconFinder,
+        matching: find.byType(IgnorePointer),
+      );
+      expect(ignorePointer, findsWidgets);
+    });
+
+    testWidgets('collapsedLeft shows icon overlay instead of hamburger',
+        (tester) async {
+      await tester.pumpWidget(wrap(
+        const ModeToggleButton(
+          state: ModeToggleState.collapsedLeft,
+          collapsedWidth: 52,
+          icon: Icon(Icons.dashboard, size: 20),
+          label: 'Playground',
+        ),
+      ));
+      await tester.pump(const Duration(milliseconds: 350));
+
+      // Icon should still be visible (in the overlay)
+      expect(find.byIcon(Icons.dashboard), findsWidgets);
+      // Label should be hidden at collapsed width
+      expect(find.text('Playground'), findsNothing);
+    });
+
+    testWidgets('collapsedLeft shows monogram when label-only (no icon)',
+        (tester) async {
+      await tester.pumpWidget(wrap(
+        const ModeToggleButton(
+          state: ModeToggleState.collapsedLeft,
+          collapsedWidth: 52,
+          label: 'Playground',
+        ),
+      ));
+      await tester.pump(const Duration(milliseconds: 350));
+
+      // Monogram first character should appear
+      expect(find.text('P'), findsOneWidget);
+      // Full label should be hidden
+      expect(find.text('Playground'), findsNothing);
+    });
+
+    testWidgets('collapsedRight renders icon + label + morphed icon',
+        (tester) async {
+      await tester.pumpWidget(wrap(
+        const ModeToggleButton(
+          state: ModeToggleState.collapsedRight,
+          icon: Icon(Icons.dashboard, size: 20),
+          label: 'Playground',
+        ),
+      ));
+      await tester.pump(const Duration(milliseconds: 350));
+
+      expect(find.byIcon(Icons.dashboard), findsWidgets);
+      expect(find.text('Playground'), findsOneWidget);
+    });
+
+    testWidgets('no icon or label renders exactly as before (backwards compat)',
+        (tester) async {
+      await tester.pumpWidget(wrap(
+        const ModeToggleButton(
+          state: ModeToggleState.split,
+        ),
+      ));
+
+      // No IgnorePointer wrapping an icon
+      expect(find.byType(Icon), findsNothing);
+      // Hamburger painter still present
+      final paints = tester.widgetList<CustomPaint>(find.byType(CustomPaint));
+      final hasHamburger = paints.any(
+        (cp) => cp.painter.runtimeType.toString() == 'HamburgerMorphPainter',
+      );
+      expect(hasHamburger, isTrue);
+    });
+
+    testWidgets('icon-only (no label) renders icon in split mode',
+        (tester) async {
+      await tester.pumpWidget(wrap(
+        const ModeToggleButton(
+          state: ModeToggleState.split,
+          icon: Icon(Icons.dashboard, size: 20),
+        ),
+      ));
+      expect(find.byIcon(Icons.dashboard), findsOneWidget);
+    });
+
+    testWidgets('split mode with branding still fires onLeftTap/onRightTap',
+        (tester) async {
+      var leftTapped = false;
+      var rightTapped = false;
+      await tester.pumpWidget(wrap(
+        ModeToggleButton(
+          state: ModeToggleState.split,
+          icon: const Icon(Icons.dashboard, size: 20),
+          label: 'Playground',
+          expandedWidth: 220,
+          onLeftTap: () => leftTapped = true,
+          onRightTap: () => rightTapped = true,
+        ),
+      ));
+
+      final buttonFinder = find.byType(ModeToggleButton);
+      final topLeft = tester.getTopLeft(buttonFinder);
+      await tester.tapAt(Offset(topLeft.dx + 20, topLeft.dy + 24));
+      await tester.pump();
+
+      expect(leftTapped, isTrue);
+      expect(rightTapped, isFalse);
+    });
+  });
 }

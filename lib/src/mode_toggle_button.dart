@@ -26,6 +26,7 @@ class ModeToggleButton extends HoverButtonBase {
   final ModeToggleState state;
   final double expandedWidth;
   final double collapsedWidth;
+  final Widget? icon;
   final String? label;
   final double iconSize;
   final double arrowSize;
@@ -37,6 +38,7 @@ class ModeToggleButton extends HoverButtonBase {
     this.state = ModeToggleState.split,
     this.expandedWidth = 220,
     this.collapsedWidth = 52,
+    this.icon,
     this.label,
     this.iconSize = 24,
     this.arrowSize = 10,
@@ -89,6 +91,7 @@ class _ModeToggleButtonState
     final textCol =
         widget.textColor ?? Theme.of(context).colorScheme.onSurface;
     final isSplit = widget.state == ModeToggleState.split;
+    final hasBranding = widget.icon != null || widget.label != null;
 
     // Arrows only visible in split mode
     final arrowPresence = isSplit ? presence : 0.0;
@@ -128,7 +131,8 @@ class _ModeToggleButtonState
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                    mainAxisSize:
+                        hasBranding ? MainAxisSize.max : MainAxisSize.min,
                     children: [
                       // Left arrow
                       ClipRect(
@@ -152,15 +156,9 @@ class _ModeToggleButtonState
                           ),
                         ),
                       ),
-                      // Hamburger / morph icon
-                      CustomPaint(
-                        size: Size.square(widget.iconSize),
-                        painter: HamburgerMorphPainter(
-                          morphProgress: morphProgress,
-                          color: textCol,
-                          strokeWidth: widget.strokeWidth,
-                        ),
-                      ),
+                      // Branding icon
+                      if (widget.icon != null)
+                        IgnorePointer(child: widget.icon!),
                       // Label
                       if (widget.label != null && labelOpacity > 0.01)
                         Flexible(
@@ -178,6 +176,21 @@ class _ModeToggleButtonState
                                   color: textCol,
                                 ),
                               ),
+                            ),
+                          ),
+                        ),
+                      // Spacer pushes hamburger right when branding is present
+                      if (hasBranding) const Spacer(),
+                      // Hamburger / morph icon (fades when branding replaces it)
+                      if (!hasBranding || labelOpacity > 0.01)
+                        Opacity(
+                          opacity: hasBranding ? labelOpacity : 1.0,
+                          child: CustomPaint(
+                            size: Size.square(widget.iconSize),
+                            painter: HamburgerMorphPainter(
+                              morphProgress: morphProgress,
+                              color: textCol,
+                              strokeWidth: widget.strokeWidth,
                             ),
                           ),
                         ),
@@ -209,7 +222,42 @@ class _ModeToggleButtonState
               ),
             ),
           ),
+        // Collapsed branding overlay — fades in as width shrinks
+        if (hasBranding && labelOpacity < 0.99)
+          Positioned.fill(
+            child: Center(
+              child: Opacity(
+                opacity: (1.0 - labelOpacity).clamp(0.0, 1.0),
+                child: IgnorePointer(
+                  child: widget.icon ?? _buildMonogram(accent),
+                ),
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildMonogram(Color accent) {
+    final char = widget.label?.isNotEmpty == true
+        ? widget.label![0].toUpperCase()
+        : '?';
+    return Container(
+      width: widget.iconSize,
+      height: widget.iconSize,
+      decoration: BoxDecoration(
+        color: accent.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      alignment: Alignment.center,
+      child: Text(
+        char,
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          color: accent,
+        ),
       ),
     );
   }

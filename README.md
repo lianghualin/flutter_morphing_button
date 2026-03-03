@@ -29,6 +29,16 @@ Hover across each button — the arrow morphs based on where your cursor is. Lef
 | 3 | **Soft Shadow Float** | White card that lifts with colored shadow |
 | 4 | **Underline Editorial** | Typography-first with sweeping underline |
 
+### ModeToggleButton
+
+A split/collapse toggle with optional branding support:
+
+| State | Description |
+|-------|-------------|
+| **Split** | Two hover zones with directional arrows; icon + label + hamburger |
+| **CollapsedRight** | Full width, single tap zone; icon + label + morphed icon |
+| **CollapsedLeft** | Icon-only width; shows branding icon, monogram, or hamburger fallback |
+
 ### NavToggle
 
 | Mode | Description |
@@ -136,6 +146,27 @@ NavToggleButton(
 )
 ```
 
+### ModeToggleButton
+
+```dart
+ModeToggleButton(
+  state: ModeToggleState.split,
+  icon: Icon(Icons.dashboard, size: 24),  // optional branding icon
+  label: 'Playground',                     // optional label text
+  expandedWidth: 220,
+  collapsedWidth: 52,
+  onLeftTap: () => print('collapse left'),
+  onRightTap: () => print('collapse right'),
+  onTap: () => print('expand back to split'),
+)
+```
+
+When `icon` or `label` is provided, the layout shifts to show branding on the left and the hamburger icon on the right. In `collapsedLeft` mode:
+
+- **With icon** — the icon is centered in the collapsed rail
+- **With label only** — a circled monogram (first character) is shown
+- **Neither** — falls back to the existing hamburger/morphed icon
+
 ### Enabled State & Split Ratio
 
 All buttons support `enabled` and `splitRatio`:
@@ -211,6 +242,8 @@ HoverButtonBase (abstract — hover, tap, enabled, splitRatio)
 │   ├── OutlineFillButton
 │   ├── SoftShadowButton
 │   └── UnderlineMinimalButton
+│
+├── ModeToggleButton (split/collapse toggle with branding support)
 │
 └── NavToggleBase (currentWidth, mode, isSelected, icon, label)
     └── NavToggleButton (3-mode rendering)

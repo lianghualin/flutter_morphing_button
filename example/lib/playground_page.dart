@@ -28,6 +28,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   double _modeToggleExpandedWidth = 220;
   double _modeToggleCollapsedWidth = 52;
   String _modeToggleLabel = 'MENU';
+  IconData? _modeToggleIcon = Icons.dashboard;
 
   // -- V1: Glass Pill --
   String _v1Label = 'EXPLORE';
@@ -685,6 +686,9 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
               state: _modeToggleState,
               expandedWidth: _modeToggleExpandedWidth,
               collapsedWidth: _modeToggleCollapsedWidth,
+              icon: _modeToggleIcon != null
+                  ? Icon(_modeToggleIcon!, size: 20)
+                  : null,
               label: _modeToggleLabel,
               accentColor: const Color(0xFF6366F1),
               enabled: _enabled,
@@ -716,6 +720,10 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
             width: 360,
             child: Column(
               children: [
+                _IconPickerControl(
+                  selected: _modeToggleIcon,
+                  onChanged: (v) => setState(() => _modeToggleIcon = v),
+                ),
                 _LabelControl(
                   value: _modeToggleLabel,
                   onChanged: (v) => setState(() => _modeToggleLabel = v),
@@ -1409,6 +1417,85 @@ class _ToggleControl extends StatelessWidget {
 // ---------------------------------------------------------------------------
 // Label text control
 // ---------------------------------------------------------------------------
+
+class _IconPickerControl extends StatelessWidget {
+  final IconData? selected;
+  final ValueChanged<IconData?> onChanged;
+
+  static const _options = <(String, IconData?)>[
+    ('None', null),
+    ('Dashboard', Icons.dashboard),
+    ('Home', Icons.home),
+    ('Settings', Icons.settings),
+    ('Star', Icons.star),
+    ('Palette', Icons.palette),
+  ];
+
+  const _IconPickerControl({
+    required this.selected,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 110,
+            child: Text(
+              'Icon',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF666666),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Wrap(
+              spacing: 4,
+              children: _options.map((opt) {
+                final isSelected = opt.$2 == selected;
+                return GestureDetector(
+                  onTap: () => onChanged(opt.$2),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? const Color(0xFF6366F1)
+                          : const Color(0xFFF5F5FA),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (opt.$2 != null)
+                          Icon(opt.$2, size: 14,
+                              color: isSelected ? Colors.white : const Color(0xFF666666)),
+                        if (opt.$2 != null) const SizedBox(width: 4),
+                        Text(
+                          opt.$1,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: isSelected
+                                ? Colors.white
+                                : const Color(0xFF666666),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _LabelControl extends StatelessWidget {
   final String value;
