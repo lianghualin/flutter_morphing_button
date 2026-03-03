@@ -336,6 +336,22 @@ void main() {
       expect(find.byIcon(Icons.dashboard), findsOneWidget);
     });
 
+    testWidgets('showModeIcon false hides hamburger painter', (tester) async {
+      await tester.pumpWidget(wrap(
+        const ModeToggleButton(
+          state: ModeToggleState.split,
+          icon: Icon(Icons.dashboard, size: 20),
+          label: 'Playground',
+          showModeIcon: false,
+        ),
+      ));
+      final paints = tester.widgetList<CustomPaint>(find.byType(CustomPaint));
+      final hasHamburger = paints.any(
+        (cp) => cp.painter.runtimeType.toString() == 'HamburgerMorphPainter',
+      );
+      expect(hasHamburger, isFalse);
+    });
+
     testWidgets('split mode with branding still fires onLeftTap/onRightTap',
         (tester) async {
       var leftTapped = false;

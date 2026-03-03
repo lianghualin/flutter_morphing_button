@@ -31,6 +31,7 @@ class ModeToggleButton extends HoverButtonBase {
   final double iconSize;
   final double arrowSize;
   final double strokeWidth;
+  final bool showModeIcon;
   final Duration animationDuration;
 
   const ModeToggleButton({
@@ -43,6 +44,7 @@ class ModeToggleButton extends HoverButtonBase {
     this.iconSize = 24,
     this.arrowSize = 10,
     this.strokeWidth = 2.0,
+    this.showModeIcon = true,
     this.animationDuration = const Duration(milliseconds: 300),
     super.onTap,
     super.onLeftTap,
@@ -182,7 +184,8 @@ class _ModeToggleButtonState
                       // Spacer pushes hamburger right when branding is present
                       if (hasBranding) const Spacer(),
                       // Hamburger / morph icon (fades when branding replaces it)
-                      if (!hasBranding || labelOpacity > 0.01)
+                      if (widget.showModeIcon &&
+                          (!hasBranding || labelOpacity > 0.01))
                         Opacity(
                           opacity: hasBranding ? labelOpacity : 1.0,
                           child: CustomPaint(

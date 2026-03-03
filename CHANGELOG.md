@@ -1,3 +1,9 @@
+## 0.1.2
+
+- Add `showModeIcon` parameter to ModeToggleButton (default `true`)
+- Set `showModeIcon: false` to hide the hamburger/morph icon when branding is sufficient
+- Add "Show Mode Icon" toggle to playground example
+
 ## 0.1.1
 
 - Add `Widget? icon` parameter to ModeToggleButton for custom branding

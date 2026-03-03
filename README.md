@@ -167,6 +167,8 @@ When `icon` or `label` is provided, the layout shifts to show branding on the le
 - **With label only** — a circled monogram (first character) is shown
 - **Neither** — falls back to the existing hamburger/morphed icon
 
+Set `showModeIcon: false` to hide the hamburger/morph icon entirely — useful when the branding icon already communicates the button's purpose.
+
 ### Enabled State & Split Ratio
 
 All buttons support `enabled` and `splitRatio`:

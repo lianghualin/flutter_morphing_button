@@ -29,6 +29,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
   double _modeToggleCollapsedWidth = 52;
   String _modeToggleLabel = 'MENU';
   IconData? _modeToggleIcon = Icons.dashboard;
+  bool _modeToggleShowModeIcon = true;
 
   // -- V1: Glass Pill --
   String _v1Label = 'EXPLORE';
@@ -690,6 +691,7 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                   ? Icon(_modeToggleIcon!, size: 20)
                   : null,
               label: _modeToggleLabel,
+              showModeIcon: _modeToggleShowModeIcon,
               accentColor: const Color(0xFF6366F1),
               enabled: _enabled,
               splitRatio: _splitRatio,
@@ -727,6 +729,12 @@ class _PlaygroundPageState extends State<PlaygroundPage> {
                 _LabelControl(
                   value: _modeToggleLabel,
                   onChanged: (v) => setState(() => _modeToggleLabel = v),
+                ),
+                _ToggleControl(
+                  label: 'Show Mode Icon',
+                  value: _modeToggleShowModeIcon,
+                  onChanged: (v) =>
+                      setState(() => _modeToggleShowModeIcon = v),
                 ),
                 _SliderControl(
                   label: 'Expanded W',
